@@ -1,0 +1,122 @@
+{% extends 'myapp/layouts/base.html' %} {% block content %}
+<main class="mx-auto w-[80%]">
+  <div class="flex justify-between my-10">
+    <h2 class="text-xl font-bold text-gray-700">Todo List</h2>
+    <a
+      href="{% url 'create_todo' %}"
+      class="p-2 border border-slate-200 rounded-md inline-flex space-x-1 items-center text-indigo-200 hover:text-white bg-indigo-600 hover:bg-indigo-500"
+      >Create a new Todo</a
+    >
+  </div>
+  {% comment %}
+  <ul>
+    {% for todo in todos %}
+    <li>
+      <strong>{{ todo.name }}</strong>
+      <ul>
+        {% for item in todo.items.all %}
+        <li>
+          {{ item.text }} {% if item.complete %} (completed) {% else %}
+          <a href="{% url 'toggle_complete' item.id %}">Mark as complete</a>
+          {% endif %}
+          <a href="{% url 'delete_todo' todo.id %}">Delete Todo</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endcomment %}
+
+  <!-- component -->
+
+  <div class="flex flex-col justify-center items-center">
+    <div
+      class="!z-5 relative flex flex-col rounded-[20px] max-w-[500px] bg-white bg-clip-border shadow-3xl shadow-shadow-500 flex flex-col w-full !p-4 3xl:p-![18px] bg-white undefined"
+    >
+      <div class="relative flex flex-row justify-between">
+        <div class="flex items-center">
+          <div
+            class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100"
+          >
+            <span class="material-symbols-rounded h-6 w-6 text-brand-500">
+              check_circle
+            </span>
+          </div>
+          <h4 class="ml-4 text-xl font-bold text-navy-700">Tasks</h4>
+        </div>
+        <button
+          class="flex items-center text-xl hover:cursor-pointer bg-lightPrimary p-2 text-brand-500 hover:bg-gray-100 rounded-lg"
+        >
+          <svg
+            stroke="currentColor"
+            fill="currentColor"
+            stroke-width="0"
+            viewBox="0 0 16 16"
+            class="h-6 w-6"
+            height="1em"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="h-full w-full">
+        {% for todo in todos %}
+        <div class="mt-5 flex items-center justify-between p-2">
+          <div class="flex items-center justify-center gap-2">
+            <input
+              type="checkbox"
+              class="defaultCheckbox relative flex h-[20px] min-h-[20px] w-[20px] min-w-[20px] appearance-none items-center justify-center rounded-md border border-gray-300 text-white/0 outline-none transition duration-[0.2s] checked:border-none checked:text-white hover:cursor-pointer checked:bg-brand-500"
+              name="weekly"
+            />
+            <a
+              href="{% url 'show_todo' id=todo.id  %}"
+              class="text-base font-bold text-navy-700 capitalize"
+            >
+              {{ todo.name }}
+            </a>
+          </div>
+
+          <div class="flex items-center">
+            <form method="post" action="{% url 'delete_todo' todo.id %}">
+              {% csrf_token %} {% comment %}
+              <a href="{% url 'delete_todo' todo.id %}">
+                {% endcomment %}
+                <button type="submit">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-4 h-4 text-slate-500 hover:text-slate-700 hover:cursor-pointer"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                    />
+                  </svg>
+                </button>
+                {% comment %}
+              </a>
+              {% endcomment %}
+            </form>
+            <span
+              class="material-symbols-rounded h-6 w-6 text-navy-700 cursor-pointer"
+            >
+              drag_indicator
+            </span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

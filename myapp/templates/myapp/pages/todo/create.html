@@ -1,0 +1,11 @@
+{% extends 'myapp/layouts/base.html' %}
+
+{% block content %}
+  <h2>Create a Todo</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <label for="name">Todo Name</label>
+    <input type="text" name="name" id="name">
+    <button type="submit">Create Todo</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'myapp/layouts/base.html' %} 
+
+{% block title %}
+ List
+{% endblock %}
+
+{% block content %}
+<div class="">
+  <h1 style="text-transform: uppercase;">{{ls.name}}</h1>
+  <ul>
+      {%  for item in ls.item_set.all %}
+        {% if item.complete == False %}
+            <li>{{item.text}} - COMPLETE</li>
+        {% else %}
+            <li class="">{{item.text}} - INCOMPLETE</li>
+        {% endif %}
+    
+      {% endfor%}
+  </ul>
+</div>
+{% endblock %}
