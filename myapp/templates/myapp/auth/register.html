@@ -22,14 +22,32 @@
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+      {% if form.errors %}
+      <div class="text-red-600 bg-red-100 p-3 border border-red-600 rounded-lg">
+        <strong>Error!</strong> Please correct the following errors:
+        <ul class="mt-2 list-disc list-inside">
+          {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+            <li>{{ field|title }}: {{ error }}</li>
+            {% endfor %} 
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      <!-- {% if form.errors %}
+      <div class="text-red-600 bg-red-100 p-3 border border-red-600 rounded-lg">
+        {% for error in form.errors %}
+        <strong>Error!</strong> {{ error }} {% endfor %}
+      </div>
+      {% endif %} -->
       <form class="space-y-6" method="POST">
-       {% csrf_token %}
+        {% csrf_token %}
         <div>
           <label
             for="{{ form.username.id_for_label }}"
             class="block text-sm/6 font-medium text-gray-900"
-            >{{ form.username.label }} </label
-          >
+            >{{ form.username.label }}
+          </label>
           <div class="mt-2">
             <input
               type="text"
@@ -41,7 +59,7 @@
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>
-             <small class="text-gray-500">{{ form.username.help_text }}</small>
+          <small class="text-gray-500">{{ form.username.help_text }}</small>
           {% if form.username.errors %}
           <div class="text-red-500 text-sm">
             {% for error in form.username.errors %}
@@ -51,7 +69,7 @@
           {% endif %}
         </div>
 
-         <div>
+        <div>
           <label
             for="{{ form.email.id_for_label }}"
             class="block text-sm/6 font-medium text-gray-900"
@@ -68,7 +86,7 @@
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>
-           <small class="text-gray-500">{{ form.email.help_text }}</small>
+          <small class="text-gray-500">{{ form.email.help_text }}</small>
           {% if form.email.errors %}
           <div class="text-red-500 text-sm">
             {% for error in form.email.errors %}
@@ -96,14 +114,14 @@
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>
-             <small class="text-gray-500">{{ form.password1.help_text }}</small>
-           {% if form.password1.errors %}
-            <div class="text-red-500 text-sm">
-                {% for error in form.password1.errors %}
-                    <p>{{ error }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
+          <small class="text-gray-500">{{ form.password1.help_text }}</small>
+          {% if form.password1.errors %}
+          <div class="text-red-500 text-sm">
+            {% for error in form.password1.errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
         </div>
 
         <div>
@@ -124,14 +142,14 @@
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>
-             <small class="text-gray-500">{{ form.password2.help_text }}</small>
+          <small class="text-gray-500">{{ form.password2.help_text }}</small>
           {% if form.password2.errors %}
-            <div class="text-red-500 text-sm">
-                {% for error in form.password2.errors %}
-                    <p>{{ error }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
+          <div class="text-red-500 text-sm">
+            {% for error in form.password2.errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
         </div>
 
         <div>

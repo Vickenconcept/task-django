@@ -65,13 +65,19 @@ def todo_list(request):
 def create_todo(request):
     if request.method == 'POST':
         name = request.POST.get('name')
+        
+        if not name.strip():
+            messages.error(request, "Title Required")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        
         todo = TodoList.objects.create(user=request.user, name=name)
         return redirect('todo_list')
     return render(request, 'myapp/pages/todo/create.html')
 
 def show_todo(request, id):
     
-    todo = TodoList.objects.get(id=id)
+    # todo = TodoList.objects.get(id=id)
+    todo = get_object_or_404(TodoList, id=id, user=request.user)
     return render(request, 'myapp/pages/todo/show.html', {'todo': todo})
 
 # View to mark item as complete
@@ -89,8 +95,6 @@ def delete_todo(request, todo_id):
     todo.delete()
     return redirect('todo_list')
 
-
-
 def create_list(request):
     if request.method == 'POST':
         id = request.POST.get('id')
@@ -99,10 +103,12 @@ def create_list(request):
         # Validate that both id and text are provided
         if not id:
             messages.error(request, "TodoList ID is required.")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
             # return redirect('some_error_page')  # Redirect to an error page or the same page
 
-        if not text:
-            messages.error(request, "Text is required.")
+        if not text.strip() :
+            messages.error(request, "Title is required.")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
             # return redirect('some_error_page')  
 
         try:
@@ -114,7 +120,6 @@ def create_list(request):
 
         except TodoList.DoesNotExist:
             messages.error(request, "TodoList not found.")
-            # return redirect('some_error_page')  
 
     # Render the form for GET requests
     return redirect('show_todo', id=id)
