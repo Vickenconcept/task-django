@@ -11,6 +11,7 @@ urlpatterns = [
     path('todos/create', views.create_todo, name='create_todo'),
     path('todos/<int:id>/', views.show_todo, name='show_todo'),
     path('todos/delete/<int:todo_id>/', views.delete_todo, name='delete_todo'),
+    path('todos/delete/bulk/', views.todo_bulk_delete, name='todo_bulk_delete'),
     path('todos/toggle-complete/<int:item_id>', views.toggle_complete, name='toggle_complete'),
     path('list/create/', views.create_list, name='create_list'),
     path('list/<int:item_id>', views.delete_item, name='delete_item'),

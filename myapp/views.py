@@ -9,6 +9,10 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 
+from .services.TodoService import TodoService  # Import the TodoService class
+from .services.ItemService import ItemService  # Import the ItemService class
+
+
 
 def anonymous_required(view_func):
     def wrapped_view(request, *args, **kwargs):
@@ -57,79 +61,35 @@ def logout_view(request):
 
 @login_required
 def todo_list(request):
-    todos = TodoList.objects.filter(user=request.user)
-    return render(request, 'myapp/pages/todo/index.html', {'todos': todos})
+    return TodoService.todo_list(request)
 
 # View for creating a new Todo
 @login_required
 def create_todo(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        
-        if not name.strip():
-            messages.error(request, "Title Required")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-        
-        todo = TodoList.objects.create(user=request.user, name=name)
-        return redirect('todo_list')
-    return render(request, 'myapp/pages/todo/create.html')
+    return TodoService.create_todo(request)
 
-def show_todo(request, id):
-    
-    # todo = TodoList.objects.get(id=id)
-    todo = get_object_or_404(TodoList, id=id, user=request.user)
-    return render(request, 'myapp/pages/todo/show.html', {'todo': todo})
-
-# View to mark item as complete
 @login_required
-def toggle_complete(request, item_id):
-    item = get_object_or_404(Item, id=item_id)
-    item.complete = not item.complete
-    item.save()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+def show_todo(request, id):
+    return TodoService.show_todo(request, id)
 
 # View to delete a Todo
 @login_required
 def delete_todo(request, todo_id):
-    todo = TodoList.objects.get(id=todo_id)
-    todo.delete()
-    return redirect('todo_list')
+    return TodoService.delete_todo(request, todo_id)
+
+@login_required
+def todo_bulk_delete(request):
+    return TodoService.bulk_delete_todos(request)
+ 
+ # View to mark item as complete
+@login_required
+def toggle_complete(request, item_id):
+    return ItemService.toggle_complete(request, item_id)
+ 
 
 def create_list(request):
-    if request.method == 'POST':
-        id = request.POST.get('id')
-        text = request.POST.get('text')
-
-        # Validate that both id and text are provided
-        if not id:
-            messages.error(request, "TodoList ID is required.")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-            # return redirect('some_error_page')  # Redirect to an error page or the same page
-
-        if not text.strip() :
-            messages.error(request, "Title is required.")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-            # return redirect('some_error_page')  
-
-        try:
-            todo = get_object_or_404(TodoList, id=id)
-
-            item = todo.items.create(text=text)  
-
-            return redirect('show_todo', id=id)
-
-        except TodoList.DoesNotExist:
-            messages.error(request, "TodoList not found.")
-
-    # Render the form for GET requests
-    return redirect('show_todo', id=id)
+    return ItemService.create_list(request)
+    
 
 def delete_item(request, item_id):
-    try:
-        item = get_object_or_404(Item, id=item_id)
-        item.delete()
-        messages.success(request, 'Item deleted successfully!')  
-    except Exception as e:
-        messages.error(request, f'Error deleting item: {str(e)}')  
-
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+   return ItemService.delete_item(request, item_id)
